@@ -21,6 +21,7 @@ pub struct Message {
     scaling: Option<Scaling>,
     path: PathBuf,
     mode: Option<Mode>,
+    output: Option<String>,
 }
 use clap::Parser;
 use serde::Deserialize;
@@ -35,6 +36,7 @@ const FILE_HELP: &str = "The path to the wallpaper to be shown. The mode, static
 const MODE_HELP: &str = "The display mode, static or dynamic, to be used for the given wallpaper. Normally this gets detected automatically based on the file suffix. If this is not possible set it explicitly here.";
 const SCALE_HELP: &str = "The scaling mode, which should be used to fit the image to the screen. Fit will try to fit the whole image to the screen, while Fill will try to fill the screen completely upscaling and cropping the image if necessary.";
 const FILTER_HELP: &str = "The filter method which should be applied when a wallpaper is scaled. Variants correspond to cairo filters.";
+const OUTPUT_HELP: &str = "The output to apply the wallpaper to. The output name can be obtained with e.g. hyprctl monitors or equivalent commands";
 
 #[derive(clap::Parser, Debug)]
 #[clap(
@@ -82,6 +84,15 @@ pub struct Args {
         ignore_case = true,
     )]
     mode: Option<Mode>,
+    #[clap(
+        short = 'o',
+        long = "output",
+        help = "The output to which the wallpaper is applied.",
+        long_help = OUTPUT_HELP,
+        takes_value = true,
+        ignore_case = true,
+    )]
+    output: Option<String>,
 }
 
 #[derive(ArgEnum, Clone, Debug, Serialize, Deserialize)]
@@ -104,6 +115,7 @@ fn main() {
             scaling: args.scale,
             path: abs,
             mode: args.mode,
+            output: args.output,
         };
 
         if write(msg).is_err() {
