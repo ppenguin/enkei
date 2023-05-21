@@ -6,16 +6,16 @@ let
   libdeps = pkgs.buildEnv {
     name = "libdeps";
     paths = with pkgs; [
-      glib.out glib.dev gtk3.dev gdk-pixbuf.dev pango.dev cairo.dev harfbuzz.dev atk.dev
-      libsoup.dev webkitgtk.dev
-      zlib.out zlib.dev
-      wayland.dev
+      /* glib.out */ glib.dev /* gtk3.dev gdk-pixbuf.dev pango.dev */ cairo.dev /* harfbuzz.dev atk.dev */
+      # libsoup.dev webkitgtk.dev
+      # zlib.out zlib.dev
+      wayland.dev libGL.dev /* egl-wayland.dev mesa.dev */
     ] ;
   };
 in
 
 pkgs.mkShell {
-  nativeBuildInputs = with unstable; [ rustc cargo cargo-graph cargo-edit /* gcc */ ];
+  nativeBuildInputs = with unstable; [ rustc cargo cargo-graph cargo-edit pkgconfig /* gcc */ ];
   buildInputs = with unstable; [ rustfmt clippy libdeps ];
 
   # Certain Rust tools won't work without this
